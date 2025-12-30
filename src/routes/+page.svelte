@@ -2,6 +2,7 @@
 	import Counter from './Counter.svelte';
 	import welcome from '$lib/images/svelte-welcome.webp';
 	import welcomeFallback from '$lib/images/svelte-welcome.png';
+	import { Button } from '$lib/components/ui/button';
 </script>
 
 <svelte:head>
@@ -26,6 +27,9 @@
 	</h2>
 
 	<Counter />
+	<div class="mt-8">
+		<Button>Hello shadcn-svelte</Button>
+	</div>
 </section>
 
 <style>
