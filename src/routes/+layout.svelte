@@ -42,6 +42,14 @@
 							<Breadcrumb.Item>
 								<Breadcrumb.Page>Demo</Breadcrumb.Page>
 							</Breadcrumb.Item>
+						{:else if page.url.pathname.includes('/tabulator')}
+							<Breadcrumb.Item class="hidden md:block">
+								<Breadcrumb.Link href={base + '/'}>Home</Breadcrumb.Link>
+							</Breadcrumb.Item>
+							<Breadcrumb.Separator class="hidden md:block" />
+							<Breadcrumb.Item>
+								<Breadcrumb.Page>Tabulator</Breadcrumb.Page>
+							</Breadcrumb.Item>
 						{:else}
 							<Breadcrumb.Item>
 								<Breadcrumb.Page>Page</Breadcrumb.Page>
