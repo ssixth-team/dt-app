@@ -18,4 +18,5 @@ export interface WindowTitlebarProps {
 	onClose?: () => void;
 	onMaximize?: () => void;
 	showMaximize?: boolean;
+	isMaximized?: boolean;
 }

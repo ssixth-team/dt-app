@@ -1,44 +1,45 @@
 <script lang="ts">
-	import type { WindowTitlebarProps } from './types';
-	import './window.scss';
+  import type { WindowTitlebarProps } from './types';
+  import './window.scss';
 
-	let { title = '', onClose, onMaximize, showMaximize = true }: WindowTitlebarProps = $props();
+  let {
+    title = '',
+    onClose,
+    onMaximize,
+    showMaximize = true,
+    isMaximized = false
+  }: WindowTitlebarProps = $props();
 
-	function handleClose() {
-		onClose?.();
-	}
+  function handleClose() {
+    onClose?.();
+  }
 
-	function handleMaximize() {
-		onMaximize?.();
-	}
+  function handleMaximize() {
+    onMaximize?.();
+  }
 </script>
 
 <div class="window-titlebar">
-	<div style="width: 52px;"></div>
-	<!-- Spacer for centering title -->
-	{#if title}
-		<div class="window-title">{title}</div>
-	{/if}
-	<div class="window-controls">
-		<button
-			class="window-control-btn window-control-close"
-			onclick={handleClose}
-			aria-label="닫기"
-			type="button"
-		></button>
-		<button
-			class="window-control-btn window-control-minimize"
-			aria-label="최소화"
-			type="button"
-			disabled
-		></button>
-		{#if showMaximize}
-			<button
-				class="window-control-btn window-control-maximize"
-				onclick={handleMaximize}
-				aria-label="최대화"
-				type="button"
-			></button>
-		{/if}
-	</div>
+  <div style="width: 92px;"></div>
+  <!-- Spacer for centering title -->
+  {#if title}
+    <div class="window-title">{title}</div>
+  {/if}
+  <div class="window-controls">
+    {#if showMaximize}
+      <button
+        class="window-control-btn window-control-maximize"
+        class:is-maximized={isMaximized}
+        onclick={handleMaximize}
+        aria-label={isMaximized ? '복원' : '최대화'}
+        type="button"
+      ></button>
+    {/if}
+    <button
+      class="window-control-btn window-control-close"
+      onclick={handleClose}
+      aria-label="닫기"
+      type="button"
+    ></button>
+  </div>
 </div>
