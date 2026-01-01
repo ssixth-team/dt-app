@@ -3,7 +3,7 @@
 @import 'tw-animate-css';
 
 /* Tabulator 전역 스타일 */
-@import './styles/tabulator.css';
+@import './styles/tabulator.scss';
 
 @custom-variant dark (&:is(.dark *));
 
