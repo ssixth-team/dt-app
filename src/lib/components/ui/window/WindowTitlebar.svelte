@@ -7,7 +7,8 @@
     onClose,
     onMaximize,
     showMaximize = true,
-    isMaximized = false
+    isMaximized = false,
+    onDragStart
   }: WindowTitlebarProps = $props();
 
   function handleClose() {
@@ -17,9 +18,24 @@
   function handleMaximize() {
     onMaximize?.();
   }
+
+  function handleMouseDown(e: MouseEvent) {
+    // Don't start drag if clicking on buttons
+    if ((e.target as HTMLElement).closest('.window-control-btn')) {
+      return;
+    }
+    onDragStart?.(e);
+  }
 </script>
 
-<div class="window-titlebar">
+<div
+  class="window-titlebar"
+  class:draggable={!isMaximized}
+  onmousedown={handleMouseDown}
+  role="button"
+  tabindex="0"
+  aria-label="윈도우 제목 표시줄"
+>
   <div style="width: 92px;"></div>
   <!-- Spacer for centering title -->
   {#if title}

@@ -19,4 +19,5 @@ export interface WindowTitlebarProps {
 	onMaximize?: () => void;
 	showMaximize?: boolean;
 	isMaximized?: boolean;
+	onDragStart?: (e: MouseEvent) => void;
 }

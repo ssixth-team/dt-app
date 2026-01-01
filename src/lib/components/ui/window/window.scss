@@ -83,6 +83,10 @@
 	backdrop-filter: blur(10px);
 	user-select: none;
 
+	&.draggable {
+		cursor: move;
+	}
+
 	.dark & {
 		background: rgba(30, 30, 30, 0.8);
 		border-bottom-color: rgba(255, 255, 255, 0.1);
@@ -219,10 +223,8 @@
 @keyframes windowScaleOut {
 	from {
 		opacity: 1;
-		transform: scale(1);
 	}
 	to {
 		opacity: 0;
-		transform: scale(0.95);
 	}
 }
