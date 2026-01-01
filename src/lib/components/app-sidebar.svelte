@@ -148,6 +148,11 @@
 				name: 'Tabulator',
 				url: '/tabulator',
 				icon: SquareTerminal
+			},
+			{
+				name: 'Window Demo',
+				url: '/window-demo',
+				icon: Frame
 			}
 		]
 	};

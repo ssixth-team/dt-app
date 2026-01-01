@@ -1,0 +1,228 @@
+/**
+ * macOS Window 스타일
+ * Finder 창 애니메이션 및 스타일링
+ */
+
+/* Overlay 배경 */
+.window-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 50;
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(4px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+
+	/* Overlay fade 애니메이션 */
+	&.window-overlay-enter {
+		animation: overlayFadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	&.window-overlay-exit {
+		animation: overlayFadeOut 200ms cubic-bezier(0.4, 0, 0.2, 1);
+		/* 애니메이션 중에도 blur 유지 */
+		animation-fill-mode: forwards;
+	}
+}
+
+/* Window 컨테이너 */
+.window-container {
+	position: relative;
+	background: white;
+	border-radius: 12px;
+	box-shadow:
+		0 25px 50px -12px rgba(0, 0, 0, 0.25),
+		0 0 0 1px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	max-height: 90vh;
+	overflow: hidden;
+
+	/* macOS 스타일 scale + fade 애니메이션 */
+	&.window-enter {
+		animation: windowScaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	&.window-exit {
+		animation: windowScaleOut 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* Dark mode */
+	.dark & {
+		background: oklch(0.208 0.042 265.755);
+		box-shadow:
+			0 25px 50px -12px rgba(0, 0, 0, 0.5),
+			0 0 0 1px rgba(255, 255, 255, 0.1);
+	}
+}
+
+/* Variant: Alert */
+.window-container.variant-alert {
+	max-width: 400px;
+}
+
+/* Variant: Fullscreen */
+.window-container.variant-fullscreen {
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	border-radius: 0;
+}
+
+/* Titlebar */
+.window-titlebar {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	background: rgba(255, 255, 255, 0.8);
+	backdrop-filter: blur(10px);
+	user-select: none;
+
+	.dark & {
+		background: rgba(30, 30, 30, 0.8);
+		border-bottom-color: rgba(255, 255, 255, 0.1);
+	}
+}
+
+/* macOS 트래픽 라이트 버튼 */
+.window-controls {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.window-control-btn {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	position: relative;
+
+	&:hover {
+		filter: brightness(0.9);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+
+	/* 호버 시 아이콘 표시 */
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transition: opacity 0.15s ease;
+		font-size: 8px;
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	&:hover::before {
+		opacity: 1;
+	}
+}
+
+.window-control-close {
+	background: #ff5f57;
+
+	&:hover::before {
+		content: '×';
+		font-size: 14px;
+		font-weight: bold;
+	}
+}
+
+.window-control-minimize {
+	background: #ffbd2e;
+
+	&:hover::before {
+		content: '−';
+		font-size: 12px;
+		font-weight: bold;
+	}
+}
+
+.window-control-maximize {
+	background: #28c840;
+
+	&:hover::before {
+		content: '+';
+		font-size: 12px;
+		font-weight: bold;
+	}
+}
+
+/* Titlebar 제목 */
+.window-title {
+	flex: 1;
+	text-align: center;
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: rgba(0, 0, 0, 0.8);
+
+	.dark & {
+		color: rgba(255, 255, 255, 0.9);
+	}
+}
+
+/* Window 콘텐츠 */
+.window-content {
+	flex: 1;
+	overflow-y: auto;
+	padding: 1.5rem;
+}
+
+/* 애니메이션 정의 */
+@keyframes overlayFadeIn {
+	from {
+		opacity: 0;
+		backdrop-filter: blur(0px);
+	}
+	to {
+		opacity: 1;
+		backdrop-filter: blur(4px);
+	}
+}
+
+@keyframes overlayFadeOut {
+	from {
+		opacity: 1;
+		backdrop-filter: blur(4px);
+	}
+	to {
+		opacity: 0;
+		backdrop-filter: blur(0px);
+	}
+}
+
+@keyframes windowScaleIn {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes windowScaleOut {
+	from {
+		opacity: 1;
+		transform: scale(1);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+}
