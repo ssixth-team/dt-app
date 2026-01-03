@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Quill from 'quill';
-  import 'quill/dist/quill.snow.css';
+  import type Quill from 'quill';
 
   let editorElement: HTMLDivElement;
   let toolbarElement: HTMLDivElement;
@@ -9,15 +8,22 @@
   let customToolbarElement: HTMLDivElement;
   let customEditorElement: HTMLDivElement;
 
-  let quillBasic: Quill;
-  let quillReadOnly: Quill;
-  let quillCustom: Quill;
+  let quillBasic: Quill | null = null;
+  let quillReadOnly: Quill | null = null;
+  let quillCustom: Quill | null = null;
 
   let editorContent = $state('');
 
-  onMount(() => {
+  onMount(async () => {
+    // 동적으로 Quill import (클라이언트 사이드에서만 실행)
+    const QuillModule = await import('quill');
+    const QuillClass = QuillModule.default;
+
+    // CSS도 동적으로 import
+    await import('quill/dist/quill.snow.css');
+
     // 기본 에디터
-    quillBasic = new Quill(editorElement, {
+    quillBasic = new QuillClass(editorElement, {
       theme: 'snow',
       placeholder: '내용을 입력하세요...',
       modules: {
@@ -34,11 +40,13 @@
 
     // 내용 변경 감지
     quillBasic.on('text-change', () => {
-      editorContent = quillBasic.root.innerHTML;
+      if (quillBasic) {
+        editorContent = quillBasic.root.innerHTML;
+      }
     });
 
     // 읽기 전용 에디터
-    quillReadOnly = new Quill(readOnlyElement, {
+    quillReadOnly = new QuillClass(readOnlyElement, {
       theme: 'snow',
       readOnly: true,
       modules: {
@@ -59,7 +67,7 @@
     ]);
 
     // 커스텀 툴바 에디터
-    quillCustom = new Quill(customEditorElement, {
+    quillCustom = new QuillClass(customEditorElement, {
       theme: 'snow',
       placeholder: '커스텀 툴바로 작성해보세요...',
       modules: {
@@ -71,9 +79,9 @@
 
     return () => {
       // Cleanup
-      if (quillBasic) quillBasic = null as any;
-      if (quillReadOnly) quillReadOnly = null as any;
-      if (quillCustom) quillCustom = null as any;
+      quillBasic = null;
+      quillReadOnly = null;
+      quillCustom = null;
     };
   });
 
@@ -114,6 +122,10 @@ Delta 길이: ${JSON.stringify(delta).length} characters
     }
   }
 </script>
+
+<svelte:head>
+  <title>Quill Demo - Rich Text Editor</title>
+</svelte:head>
 
 <div class="container mx-auto py-8 px-4">
   <div class="mb-8">
