@@ -16,6 +16,8 @@
   import NavProjects from './nav-projects.svelte';
   import NavUser from './nav-user.svelte';
   import TeamSwitcher from './team-switcher.svelte';
+  import ThemeSelector from './theme-selector.svelte';
+  import { Separator } from '$lib/components/ui/separator/index.js';
 
   // This is sample data.
   const data = {
@@ -173,6 +175,8 @@
     <NavProjects projects={data.projects} />
   </Sidebar.Content>
   <Sidebar.Footer>
+    <ThemeSelector />
+    <Separator class="my-2" />
     <NavUser user={data.user} />
   </Sidebar.Footer>
   <Sidebar.Rail />
