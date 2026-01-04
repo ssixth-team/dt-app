@@ -8,17 +8,26 @@
   // 폐쇄망 환경을 위한 npm 패키지 import
   import * as XLSX from 'xlsx';
   import jsPDF from 'jspdf';
-  import autoTable from 'jspdf-autotable';
+  // jspdf-autotable를 동적으로 로드
+  let autoTableLoaded = false;
 
   let tableDiv: HTMLDivElement;
   let table: Tabulator;
 
-  onMount(() => {
+  onMount(async () => {
     // 전역 객체에 라이브러리 등록 (Tabulator가 사용할 수 있도록)
     if (typeof window !== 'undefined') {
       (window as any).XLSX = XLSX;
       (window as any).jsPDF = jsPDF;
       (window as any).jspdf = jsPDF; // Tabulator는 소문자 jspdf를 찾음
+
+      // autoTable 동적 로드
+      try {
+        await import('jspdf-autotable');
+        autoTableLoaded = true;
+      } catch (e) {
+        console.error('Failed to load jspdf-autotable:', e);
+      }
     }
 
     table = new Tabulator(tableDiv, {
