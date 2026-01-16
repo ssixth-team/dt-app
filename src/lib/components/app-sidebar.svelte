@@ -6,6 +6,7 @@
     Bot,
     Command,
     Database,
+    FileText,
     Frame,
     GalleryVerticalEnd,
     Map,
@@ -151,6 +152,11 @@
         name: 'Items',
         url: '/items',
         icon: Database
+      },
+      {
+        name: 'Reference',
+        url: '/reference',
+        icon: FileText
       },
       {
         name: 'Tabulator',

@@ -15,6 +15,7 @@
     { path: '/about', label: 'About' },
     { path: '/demo', label: 'Demo' },
     { path: '/items', label: 'Items' },
+    { path: '/reference', label: 'Reference' },
     { path: '/tabulator', label: 'Tabulator' },
     { path: '/window-demo', label: 'Window Demo' },
     { path: '/quill-demo', label: 'Quill Demo' }
