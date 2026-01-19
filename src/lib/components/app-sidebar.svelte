@@ -159,6 +159,11 @@
         icon: FileText
       },
       {
+        name: 'References',
+        url: '/references',
+        icon: Database
+      },
+      {
         name: 'Tabulator',
         url: '/tabulator',
         icon: SquareTerminal
