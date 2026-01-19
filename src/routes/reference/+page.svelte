@@ -14,7 +14,8 @@
 
   // 폼 상태
   let process = $state<'design' | 'development' | 'testing' | 'deployment'>('design');
-  let rev = $state<'A' | 'B' | 'C' | 'D'>('A');
+  let phase = $state('');
+  let avail = $state<'Y' | 'N'>('Y');
   let userId = $state('');
   let userName = $state('');
   let userEmail = $state('');
@@ -38,8 +39,8 @@
   async function handleSubmit(e: Event) {
     e.preventDefault();
 
-    if (!userId.trim() || !userName.trim() || !userEmail.trim()) {
-      error = '사용자 정보를 모두 입력해주세요.';
+    if (!userId.trim() || !userName.trim() || !userEmail.trim() || !phase.trim()) {
+      error = '모든 필수 정보를 입력해주세요.';
       return;
     }
 
@@ -49,7 +50,8 @@
     try {
       const data = {
         process,
-        rev,
+        phase,
+        avail,
         createUser: {
           id: userId,
           name: userName,
@@ -67,7 +69,8 @@
 
       // 폼 초기화
       process = 'design';
-      rev = 'A';
+      phase = '';
+      avail = 'Y';
       userId = '';
       userName = '';
       userEmail = '';
@@ -87,7 +90,8 @@
   function handleEdit(reference: Reference) {
     editingId = reference.id;
     process = reference.process;
-    rev = reference.rev;
+    phase = reference.phase;
+    avail = reference.avail;
     userId = reference.createUser.id;
     userName = reference.createUser.name;
     userEmail = reference.createUser.email;
@@ -97,7 +101,8 @@
   function handleCancelEdit() {
     editingId = null;
     process = 'design';
-    rev = 'A';
+    phase = '';
+    avail = 'Y';
     userId = '';
     userName = '';
     userEmail = '';
@@ -133,7 +138,7 @@
   <p class="description">
     MSW + Dexie를 활용한 Reference 객체 관리 샘플 페이지입니다.
     <br />
-    Process와 Rev는 Union 타입으로, CreateUser는 객체 형태로 관리됩니다.
+    Process와 Avail은 Union 타입으로, Phase는 문자열, CreateUser는 객체 형태로 관리됩니다.
   </p>
 
   {#if error}
@@ -156,12 +161,21 @@
       </div>
 
       <div class="form-group">
-        <label for="rev">Rev</label>
-        <select id="rev" bind:value={rev} disabled={loading}>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
+        <label for="phase">Phase</label>
+        <input
+          id="phase"
+          type="text"
+          bind:value={phase}
+          placeholder="Phase를 입력하세요"
+          disabled={loading}
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="avail">Avail</label>
+        <select id="avail" bind:value={avail} disabled={loading}>
+          <option value="Y">Y</option>
+          <option value="N">N</option>
         </select>
       </div>
     </div>
@@ -226,7 +240,8 @@
             <div class="reference-header">
               <div class="reference-badges">
                 <span class="badge process-{reference.process}">{reference.process}</span>
-                <span class="badge rev">Rev {reference.rev}</span>
+                <span class="badge phase">Phase: {reference.phase}</span>
+                <span class="badge avail-{reference.avail}">Avail: {reference.avail}</span>
               </div>
               <span class="reference-date">
                 {new Date(reference.createDate).toLocaleString('ko-KR')}
@@ -451,9 +466,19 @@
     color: #388e3c;
   }
 
-  .badge.rev {
-    background-color: #f5f5f5;
-    color: #333;
+  .badge.phase {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+
+  .badge.avail-Y {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .badge.avail-N {
+    background-color: #ffebee;
+    color: #c62828;
   }
 
   .reference-date {

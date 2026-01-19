@@ -3,7 +3,8 @@ import type { Reference } from '$lib/../mocks/db';
 
 export interface CreateReferenceDto {
   process: 'design' | 'development' | 'testing' | 'deployment';
-  rev: 'A' | 'B' | 'C' | 'D';
+  phase: string;
+  avail: 'Y' | 'N';
   createUser: {
     id: string;
     name: string;
@@ -13,7 +14,8 @@ export interface CreateReferenceDto {
 
 export interface UpdateReferenceDto {
   process?: 'design' | 'development' | 'testing' | 'deployment';
-  rev?: 'A' | 'B' | 'C' | 'D';
+  phase?: string;
+  avail?: 'Y' | 'N';
   createUser?: {
     id: string;
     name: string;

@@ -1,13 +1,12 @@
+import { type Account } from './account';
+
 export interface Reference {
   id: number;
   process: 'design' | 'development' | 'testing' | 'deployment';
-  rev: 'A' | 'B' | 'C' | 'D';
-  createUser: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  phase: string;
+  avail: 'Y' | 'N';
+  createUser: Account;
   createDate: string;
 }
 
-export const referenceSchema = '++id, process, rev, createDate';
+export const referenceSchema = '++id, process, phase, avail, createDate';
