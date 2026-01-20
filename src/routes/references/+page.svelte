@@ -14,6 +14,8 @@
   let references = $state<Reference[]>([]);
   let loading = $state(false);
   let addWindowOpen = $state(false);
+  let editWindowOpen = $state(false);
+  let selectedReference = $state<Reference | null>(null);
 
   // Reference 데이터 로딩
   async function loadReferences() {
@@ -28,6 +30,13 @@
     } finally {
       loading = false;
     }
+  }
+
+  // Row 클릭 핸들러
+  function handleRowClick(_e: any, row: any) {
+    const data = row.getData() as Reference;
+    selectedReference = data;
+    editWindowOpen = true;
   }
 
   // Tabulator 테이블 초기화
@@ -65,6 +74,19 @@
           title: 'Phase',
           field: 'phase',
           width: 150
+        },
+        {
+          title: 'Type',
+          field: 'type',
+          width: 100,
+          hozAlign: 'center',
+          formatter: (cell) => {
+            const value = cell.getValue();
+            const color = value === 'official' ? '#1565c0' : '#6a1b9a';
+            const bg = value === 'official' ? '#e3f2fd' : '#f3e5f5';
+            const text = value === 'official' ? 'Official' : 'Local';
+            return `<span style="background-color: ${bg}; color: ${color}; padding: 4px 12px; border-radius: 12px; font-weight: 500;">${text}</span>`;
+          }
         },
         {
           title: 'Avail',
@@ -105,11 +127,21 @@
       paginationSize: 10,
       paginationSizeSelector: [10, 20, 50, 100]
     });
+
+    // rowClick 이벤트를 on 메서드로 바인딩
+    table.on('rowClick', handleRowClick);
   });
 
   // Reference 추가 성공 핸들러
   function handleReferenceAdded() {
     addWindowOpen = false;
+    loadReferences();
+  }
+
+  // Reference 수정 성공 핸들러
+  function handleReferenceUpdated() {
+    editWindowOpen = false;
+    selectedReference = null;
     loadReferences();
   }
 </script>
@@ -145,6 +177,19 @@
 <!-- Non-Modal Window for Adding Reference -->
 <Window bind:open={addWindowOpen} title="Add New Reference" width="600px" modal={false}>
   <ReferenceForm onSuccess={handleReferenceAdded} onCancel={() => (addWindowOpen = false)} />
+</Window>
+
+<!-- Non-Modal Window for Editing Reference -->
+<Window bind:open={editWindowOpen} title="Edit Reference" width="600px" modal={false}>
+  <ReferenceForm
+    editMode={true}
+    initialData={selectedReference}
+    onSuccess={handleReferenceUpdated}
+    onCancel={() => {
+      editWindowOpen = false;
+      selectedReference = null;
+    }}
+  />
 </Window>
 
 <style>

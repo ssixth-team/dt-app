@@ -4,6 +4,7 @@ import type { Reference } from '$lib/../mocks/db';
 export interface CreateReferenceDto {
   process: string; // 사용자 입력 허용
   phase: string;
+  type: 'local' | 'official';
   avail: 'Y' | 'N';
   // createUser는 백엔드에서 JWT 토큰으로 자동 주입
 }
@@ -11,6 +12,7 @@ export interface CreateReferenceDto {
 export interface UpdateReferenceDto {
   process?: string; // 사용자 입력 허용
   phase?: string;
+  type?: 'local' | 'official';
   avail?: 'Y' | 'N';
   // createUser는 수정 불가
 }

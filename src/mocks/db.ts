@@ -18,6 +18,11 @@ export class AppDB extends Dexie {
       items: itemSchema,
       references: referenceSchema
     });
+    // type 필드 추가를 위한 버전 업그레이드
+    this.version(3).stores({
+      items: itemSchema,
+      references: referenceSchema
+    });
   }
 }
 

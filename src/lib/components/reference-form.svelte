@@ -1,21 +1,30 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { createReference, getReferences, type CreateReferenceDto } from '$lib/api/references';
+  import {
+    createReference,
+    updateReference,
+    getReferences,
+    type CreateReferenceDto,
+    type UpdateReferenceDto
+  } from '$lib/api/references';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import { authStore } from '$lib/stores/auth.svelte';
   import type { Reference } from '$lib/../mocks/schemas/reference.schema';
 
   interface Props {
+    editMode?: boolean;
+    initialData?: Reference | null;
     onSuccess?: () => void;
     onCancel?: () => void;
   }
 
-  let { onSuccess, onCancel }: Props = $props();
+  let { editMode = false, initialData = null, onSuccess, onCancel }: Props = $props();
 
   // 폼 상태
   let process = $state('');
   let phase = $state('');
+  let type = $state<'local' | 'official'>('local');
   let avail = $state<'Y' | 'N'>('Y');
 
   let loading = $state(false);
@@ -39,6 +48,14 @@
   onMount(async () => {
     try {
       allReferences = await getReferences();
+
+      // 수정 모드일 때 초기 데이터로 폼 필드 설정
+      if (editMode && initialData) {
+        process = initialData.process;
+        phase = initialData.phase;
+        type = initialData.type;
+        avail = initialData.avail;
+      }
     } catch (e) {
       console.error('Failed to load references:', e);
     }
@@ -62,24 +79,39 @@
     error = null;
 
     try {
-      const data: CreateReferenceDto = {
-        process: process.trim(),
-        phase: phase.trim(),
-        avail
-        // createUser는 백엔드에서 JWT 토큰으로 자동 주입
-      };
+      if (editMode && initialData) {
+        // 수정 모드
+        const updateData: UpdateReferenceDto = {
+          process: process.trim(),
+          phase: phase.trim(),
+          type,
+          avail
+        };
+        await updateReference(initialData.id, updateData);
+      } else {
+        // 추가 모드
+        const createData: CreateReferenceDto = {
+          process: process.trim(),
+          phase: phase.trim(),
+          type,
+          avail
+          // createUser는 백엔드에서 JWT 토큰으로 자동 주입
+        };
+        await createReference(createData);
+      }
 
-      await createReference(data);
-
-      // 폼 초기화
-      process = '';
-      phase = '';
-      avail = 'Y';
+      // 폼 초기화 (추가 모드일 때만)
+      if (!editMode) {
+        process = '';
+        phase = '';
+        type = 'local';
+        avail = 'Y';
+      }
 
       // 성공 콜백 호출
       onSuccess?.();
     } catch (e) {
-      error = 'Reference 추가에 실패했습니다.';
+      error = editMode ? 'Reference 수정에 실패했습니다.' : 'Reference 추가에 실패했습니다.';
       console.error(e);
     } finally {
       loading = false;
@@ -91,6 +123,7 @@
     // 폼 초기화
     process = '';
     phase = '';
+    type = 'local';
     avail = 'Y';
     error = null;
 
@@ -124,6 +157,16 @@
       </datalist>
     </div>
 
+    <div class="form-group">
+      <label for="type">Type <span class="required">*</span></label>
+      <select id="type" bind:value={type} disabled={loading} class="select-input">
+        <option value="local">Local</option>
+        <option value="official">Official</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
     <div class="form-group">
       <label for="avail">Avail <span class="required">*</span></label>
       <select id="avail" bind:value={avail} disabled={loading} class="select-input">
@@ -177,7 +220,7 @@
   <div class="form-actions">
     <Button type="button" variant="outline" onclick={handleCancel} disabled={loading}>취소</Button>
     <Button type="submit" disabled={loading}>
-      {loading ? '추가 중...' : '추가'}
+      {loading ? (editMode ? '수정 중...' : '추가 중...') : editMode ? '수정' : '추가'}
     </Button>
   </div>
 </form>
