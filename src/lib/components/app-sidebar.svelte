@@ -47,14 +47,14 @@
     ],
     navMain: [
       {
-        title: 'Playground',
+        title: 'Fab Oust',
         url: '#',
         icon: SquareTerminal,
         isActive: true,
         items: [
           {
-            title: 'History',
-            url: '#'
+            title: 'Reference',
+            url: '/references'
           },
           {
             title: 'Starred',
@@ -67,54 +67,12 @@
         ]
       },
       {
-        title: 'Models',
-        url: '#',
-        icon: Bot,
-        items: [
-          {
-            title: 'Genesis',
-            url: '#'
-          },
-          {
-            title: 'Explorer',
-            url: '#'
-          },
-          {
-            title: 'Quantum',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Documentation',
-        url: '#',
-        icon: BookOpen,
-        items: [
-          {
-            title: 'Introduction',
-            url: '#'
-          },
-          {
-            title: 'Get Started',
-            url: '#'
-          },
-          {
-            title: 'Tutorials',
-            url: '#'
-          },
-          {
-            title: 'Changelog',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Settings',
+        title: 'Master',
         url: '#',
         icon: Settings2,
         items: [
           {
-            title: 'General',
+            title: 'Common Code',
             url: '#'
           },
           {
