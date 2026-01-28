@@ -1,0 +1,15 @@
+import { type Account } from './account';
+import { type MPW_REF_FILE } from './reference_file.schema';
+
+export interface MPW_REF {
+  id: number;
+  process: string;
+  phase: string;
+  type: 'local' | 'official';
+  avail: 'Y' | 'N';
+  files: [MPW_REF_FILE];
+  createUser: Account;
+  createDate: string;
+}
+
+export const referenceSchema = '++id, &[process+phase], type, avail, createDate';
