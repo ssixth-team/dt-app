@@ -12,4 +12,4 @@ export interface MPW_REF {
   createDate: string;
 }
 
-export const referenceSchema = '++id, &[process+phase], type, avail, createDate';
+export const refSchema = '++id, &[process+phase], type, avail, createDate';
