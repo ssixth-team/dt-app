@@ -6,9 +6,25 @@ import type { MPW_BUMP } from '$lib/schemas/bump.schema';
 import type { MPW_CORNER } from '$lib/schemas/corner.schema';
 import type { MPW_STATUS } from '$lib/schemas/status.schema';
 import type { MPW_LIMITS } from '$lib/schemas/limits.schema';
+import type { MPW_ASM_TEAM } from '$lib/schemas/asm_team.schema';
+import type { MPW_ASM_DECISION_TYPE } from '$lib/schemas/asm_decision_type.schema';
+import type { MPW_ASM_FLOW } from '$lib/schemas/asm_flow.schema';
+import type { MPW_ASM_RESULT_STATUS } from '$lib/schemas/asm_result_status.schema';
 
 // Re-export types for convenience
-export type { Item, Reference, Code, MPW_BUMP, MPW_CORNER, MPW_STATUS, MPW_LIMITS };
+export type {
+  Item,
+  Reference,
+  Code,
+  MPW_BUMP,
+  MPW_CORNER,
+  MPW_STATUS,
+  MPW_LIMITS,
+  MPW_ASM_TEAM,
+  MPW_ASM_DECISION_TYPE,
+  MPW_ASM_FLOW,
+  MPW_ASM_RESULT_STATUS
+};
 
 export class AppDB extends Dexie {
   items!: EntityTable<Item, 'id'>;
@@ -18,6 +34,10 @@ export class AppDB extends Dexie {
   corners!: EntityTable<MPW_CORNER, 'code'>;
   statuses!: EntityTable<MPW_STATUS, 'code'>;
   limits!: EntityTable<MPW_LIMITS, 'code'>;
+  teams!: EntityTable<MPW_ASM_TEAM, 'id'>;
+  decisionTypes!: EntityTable<MPW_ASM_DECISION_TYPE, 'code'>;
+  taskFlows!: EntityTable<MPW_ASM_FLOW, 'code'>;
+  resultStatuses!: EntityTable<MPW_ASM_RESULT_STATUS, 'code'>;
 
   constructor() {
     super('app-db');
@@ -47,6 +67,20 @@ export class AppDB extends Dexie {
       corners: 'code, name, avail',
       statuses: 'code, name, avail',
       limits: 'code, name, minValue, maxValue, avail'
+    });
+    // Assembly 테이블 추가
+    this.version(6).stores({
+      items: itemSchema,
+      references: referenceSchema,
+      codes: codeSchema,
+      bumps: 'code, name, useTag, avail',
+      corners: 'code, name, avail',
+      statuses: 'code, name, avail',
+      limits: 'code, name, minValue, maxValue, avail',
+      teams: '++id, teamCode, teamName, avail',
+      decisionTypes: 'code, name, use_auto_sub, avail',
+      taskFlows: 'code, name, sort, avail',
+      resultStatuses: 'code, name, sort, avail'
     });
 
     this.on('populate', () => {
@@ -84,6 +118,33 @@ export class AppDB extends Dexie {
         { code: 'LIMIT001', name: 'Temperature', minValue: 0, maxValue: 100, avail: 'Y' },
         { code: 'LIMIT002', name: 'Pressure', minValue: 0, maxValue: 200, avail: 'Y' },
         { code: 'LIMIT003', name: 'Voltage', minValue: 0, maxValue: 50, avail: 'Y' }
+      ]);
+
+      // Assembly 초기 데이터
+      this.teams.bulkAdd([
+        { teamCode: 'TEAM01', teamName: 'Assembly Team A', avail: 'Y' },
+        { teamCode: 'TEAM02', teamName: 'Assembly Team B', avail: 'Y' },
+        { teamCode: 'TEAM03', teamName: 'Assembly Team C', avail: 'Y' }
+      ]);
+
+      this.decisionTypes.bulkAdd([
+        { code: 'DT001', name: 'Auto Decision', use_auto_sub: 'Y', avail: 'Y' },
+        { code: 'DT002', name: 'Manual Decision', use_auto_sub: 'N', avail: 'Y' },
+        { code: 'DT003', name: 'Hybrid Decision', use_auto_sub: 'Y', avail: 'Y' }
+      ]);
+
+      this.taskFlows.bulkAdd([
+        { code: 'FLOW01', name: 'Preparation', sort: 1, avail: 'Y' },
+        { code: 'FLOW02', name: 'Assembly', sort: 2, avail: 'Y' },
+        { code: 'FLOW03', name: 'Inspection', sort: 3, avail: 'Y' },
+        { code: 'FLOW04', name: 'Packaging', sort: 4, avail: 'Y' }
+      ]);
+
+      this.resultStatuses.bulkAdd([
+        { code: 'RS001', name: 'Pass', sort: 1, avail: 'Y' },
+        { code: 'RS002', name: 'Fail', sort: 2, avail: 'Y' },
+        { code: 'RS003', name: 'Pending', sort: 3, avail: 'Y' },
+        { code: 'RS004', name: 'Rework', sort: 4, avail: 'Y' }
       ]);
     });
   }

@@ -5,6 +5,10 @@ import { bumpHandlers } from './bumps';
 import { cornerHandlers } from './corners';
 import { statusHandlers } from './statuses';
 import { limitsHandlers } from './limits';
+import { teamHandlers } from './teams';
+import { decisionTypeHandlers } from './decision-types';
+import { taskFlowHandlers } from './task-flows';
+import { resultStatusHandlers } from './result-statuses';
 
 export const handlers = [
   ...itemHandlers,
@@ -13,5 +17,9 @@ export const handlers = [
   ...bumpHandlers,
   ...cornerHandlers,
   ...statusHandlers,
-  ...limitsHandlers
+  ...limitsHandlers,
+  ...teamHandlers,
+  ...decisionTypeHandlers,
+  ...taskFlowHandlers,
+  ...resultStatusHandlers
 ];

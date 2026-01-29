@@ -74,6 +74,10 @@
           {
             title: 'Common Code',
             url: '/master/common-code'
+          },
+          {
+            title: 'Assembly',
+            url: '/master/assembly'
           }
         ]
       }
